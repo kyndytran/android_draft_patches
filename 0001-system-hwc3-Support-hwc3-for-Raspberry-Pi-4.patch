@@ -1,0 +1,62 @@
+From 5f24cd9e5115a6c458a46b70ec90df838d77d76b Mon Sep 17 00:00:00 2001
+From: Kha Tran <khab1304690@gmail.com>
+Date: Sat, 8 Jun 2024 16:04:21 +0700
+Subject: [PATCH] system: hwc3: Support hwc3 for Raspberry Pi 4
+
+TODO:
++ Improve and support HDMI1 for Raspberry Pi4
++ Flexible handle and support for other Raspberry
+  devices.
+
+Change-Id: I1870aabc3130cbbefc72d93dff629f1358cb8e85
+Signed-off-by: Kha Tran <khab1304690@gmail.com>
+---
+ system/hwc3/DrmClient.cpp | 25 +++++++++++++++++++++++--
+ 1 file changed, 23 insertions(+), 2 deletions(-)
+
+diff --git a/system/hwc3/DrmClient.cpp b/system/hwc3/DrmClient.cpp
+index b25acc3..078a059 100644
+--- a/system/hwc3/DrmClient.cpp
++++ b/system/hwc3/DrmClient.cpp
+@@ -146,7 +146,15 @@ bool DrmClient::loadDrmDisplays() {
+             return false;
+         }
+ 
+-        crtcs.emplace_back(std::move(crtc));
++	drmModeCrtcPtr crtcPtr;
++	crtcPtr = drmModeGetCrtc(mFd, crtcId);
++	if (crtcPtr) {
++	    if (crtcPtr->mode_valid) {
++	        DEBUG_LOG("%s: Adding valid crtc id %d", __FUNCTION__, crtcId);
++                crtcs.emplace_back(std::move(crtc));
++	    }
++	    drmModeFreeCrtc(crtcPtr);
++	}
+     }
+ 
+     for (uint32_t i = 0; i < drmResources->count_connectors; ++i) {
+@@ -158,7 +166,20 @@ bool DrmClient::loadDrmDisplays() {
+             return false;
+         }
+ 
+-        connectors.emplace_back(std::move(connector));
++	drmModeConnectorPtr conPtr;
++	conPtr = drmModeGetConnector(mFd, connectorId);
++	if (conPtr) {
++	    if (conPtr->connector_type == DRM_MODE_CONNECTOR_HDMIA) {
++		/* connector id 32 is for HDMI 0 - work with crtc id 96
++		 * connector id 42 is for HDMI 1
++		 */
++		if (connectorId == 32) {
++	           DEBUG_LOG("%s: Adding HDMI0 connector id %d", __FUNCTION__, connectorId);
++                   connectors.emplace_back(std::move(connector));
++		}
++	    }
++	    drmModeFreeConnector(conPtr);
++	}
+     }
+ 
+     drmModeFreeResources(drmResources);
+-- 
+2.34.1
+
