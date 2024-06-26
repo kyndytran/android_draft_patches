@@ -1,0 +1,7 @@
+version = Android init 0.8
+title = Boot chart for Android (1970-01-01 00:00:02)
+system.uname = Linux 6.1.80-g9cd07cf52250-dirty-v8 #1 SMP PREEMPT Thu May  2 13:21:20 UTC 2024 aarch64
+system.release = Broadcom/rpi4/rpi4:14/UD2A.240505.001.W1/eng.kyndyt.20240624.025127:userdebug/aosp_android14_r45,test-keys
+system.cpu = aarch64
+system.kernel.options = coherent_pool=1M 8250.nr_uarts=1 snd_bcm2835.enable_headphones=0 snd_bcm2835.enable_headphones=1 snd_bcm2835.enable_hdmi=1 snd_bcm2835.enable_hdmi=0  smsc95xx.macaddr=D8:3A:DD:28:33:3D vc_mem.mem_base=0x3ec00000 vc_mem.mem_size=0x40000000  console=ttyS0,115200 root=/dev/ram0 rootwait androidboot.hardware=rpi4 androidboot.selinux=permissive androidboot.serialno=RAndroid firmware_class.path=/vendor/etc/firmware loglevel=0 androidboot.serialno=10000000581288f6 androidboot.btmacaddr=11:22:58:12:88:f6
+
